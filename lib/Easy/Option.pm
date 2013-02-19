@@ -46,15 +46,28 @@ sub _hashnize {
 sub _get_seems_opt {
     my @argvall = @_;
     my %seems_opt;
-    my $last_opt;           # flag
-    my $is_long;
+    my $last_opt;
     while (local $_ = shift @argvall){
         if (s/^--//){
+            if ((!$_ || /^-+$/) && !$seems_opt{short}{$last_opt}){
+                $_ .= "--";
+                $seems_opt{short}{$last_opt} = $_;
+                next;
+            }
+            elsif(!$_){
+                die "Illegal option [--]\n";
+            }
             my ($key,$val) = split/=/;
             $seems_opt{long}{$key}  = $val || undef;
         }
         elsif (s/^-//){
-            do{$seems_opt{short}{$last_opt} = "-"} and next if /^-$/;
+            if (!$_ && !$seems_opt{short}{$last_opt}){
+                $seems_opt{short}{$last_opt} = "-";
+                next;
+            }
+            elsif (!$_){
+                die "Illegal option [-]\n";
+            }
             $seems_opt{short}{$_} = undef;
             $last_opt = $_;
         }
