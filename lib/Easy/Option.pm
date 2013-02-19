@@ -49,7 +49,7 @@ sub _get_seems_opt {
     my $last_opt;
     while (local $_ = shift @argvall){
         if (s/^--//){
-            if ((!$_ || /^-+$/) && !$seems_opt{short}{$last_opt}){
+            if ((!$_ || /^-+$/) && $last_opt && !$seems_opt{short}{$last_opt}){
                 $_ .= "--";
                 $seems_opt{short}{$last_opt} = $_;
                 next;
@@ -61,7 +61,7 @@ sub _get_seems_opt {
             $seems_opt{long}{$key}  = $val || undef;
         }
         elsif (s/^-//){
-            if (!$_ && !$seems_opt{short}{$last_opt}){
+            if (!$_ && $last_opt && !$seems_opt{short}{$last_opt}){
                 $seems_opt{short}{$last_opt} = "-";
                 next;
             }
