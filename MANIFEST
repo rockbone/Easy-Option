@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Easy-Option.t
+lib/Easy/Option.pm
